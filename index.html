@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EEU Digital Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="lang-switch">
+                <button onclick="changeLang('am')">አማርኛ</button>
+                <button onclick="changeLang('en')">English</button>
+            </div>
+            <img src="logo.jpg" alt="EEU Logo" class="logo">
+            <h1 id="mainTitle">የኢትዮጵያ ኤሌክትሪክ አገልግሎት</h1>
+            <p id="subTitle">ዲጂታል የደንበኞች አገልግሎት ማዕከል</p>
+        </header>
+
+        <section id="homeSection" class="card shadow">
+            <button class="menu-btn" onclick="showSection('customerLogin')">Customer Account Login</button>
+            <button class="menu-btn secondary" onclick="showSection('staffLogin')">Staff/Employee Login</button>
+            <button class="link-btn" id="regBtn">Register / ተመዝገብ</button>
+        </section>
+
+        <section id="customerLogin" class="card shadow" style="display:none;">
+            <h3 id="loginHeader">የደንበኛ መግቢያ</h3>
+            <input type="text" id="custID" placeholder="የደንበኛ መለያ ቁጥር">
+            <button class="primary-btn" onclick="customerAccess()">ግባ (Login)</button>
+            <button class="back-btn" onclick="showSection('homeSection')">ተመለስ</button>
+        </section>
+
+        <section id="custDashboard" class="card shadow" style="display:none;">
+            <div class="welcome-msg">
+                <h2 id="welcomeText">እንኳን በደህና መጣችሁ ውድ ደንበኞቻችን!</h2>
+            </div>
+            <h4 id="issueTitle">እባክዎ የብልሽቱን አይነት ይምረጡ፡</h4>
+            <div class="issue-grid">
+                <button class="issue-btn" onclick="selectIssue('መብራት ጠፍቷል')">1. መብራት ጠፍቷል</button>
+                <button class="issue-btn" onclick="selectIssue('ኃይል የለውም (Low Power)')">2. ኃይል የለውም</button>
+                <button class="issue-btn" onclick="selectIssue('የኃይል መቆራረጥ')">3. የኃይል መቆራረጥ</button>
+                <button class="issue-btn" onclick="selectIssue('ቆርጦብኛል')">4. ቆርጦብኛል</button>
+            </div>
+        </section>
+
+        <section id="finalForm" class="card shadow" style="display:none;">
+            <h3 id="finalTitle">ተጨማሪ መረጃ</h3>
+            <input type="text" id="city" placeholder="ከተማ (City)">
+            <input type="tel" id="phone" placeholder="ስልክ ቁጥር (Phone)">
+            <p class="gps-note">📍 GPS Location ራሱን በራሱ ይልካል</p>
+            <button class="primary-btn" onclick="submitComplaint()">ሪፖርት አድርግ (Submit)</button>
+        </section>
+
+        <section id="staffLogin" class="card shadow" style="display:none;">
+            <h3 id="staffTitle">የሰራተኞች መግቢያ</h3>
+            <input type="text" id="staffID" placeholder="የሰራተኛ መለያ ቁጥር">
+            <input type="password" id="staffPass" placeholder="Password">
+            <button class="primary-btn" onclick="handleStaffLogin()">ግባ (Login)</button>
+            <button class="back-btn" onclick="showSection('homeSection')">ተመለስ</button>
+        </section>
+
+        <section id="successScreen" class="card shadow" style="display:none; text-align:center;">
+            <div class="success-icon">✅</div>
+            <h2 id="thanksMsg">ውድ ደንበኛችን እናመሰግናለን!</h2>
+            <p id="detailsSent"></p>
+            <button class="primary-btn" onclick="location.reload()">ተመለስ (Home)</button>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
