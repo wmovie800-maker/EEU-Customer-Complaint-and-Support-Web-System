@@ -64,6 +64,14 @@ function submitComplaint() {
         }, () => {
             alert("GPS ማግኘት አልተቻለም ግን ሪፖርቱ ተልኳል");
             showSection('successScreen');
-        });
+       // የቴሌግራም መላኪያ ኮድ (መስመር 67 አካባቢ)
+const token = "8087838649:AAFGVVdmutPvL8iFZviaQZvnsT3WvDKRc0I; // ከ BotFather ያገኘኸው
+const chat_id = "8542308552";
+const message = `አዲስ ቅሬታ! \nከተማ: ${city} \nስልክ: ${phone} \nቦታ: ${gps}`;
+
+fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`)
+.then(response => console.log("ተልኳል!"))
+.catch(error => console.error("ስህተት:", error));
+ });
     }
 }
