@@ -3,12 +3,12 @@ let currentLang = "am";
 
 const translations = {
     am: {
-        title: "የኢትዮጵያ ኤሌክትሪክ አገልግሎት",
+        title: "ናኦለ ኤሌክትሪክ አገልግሎት",
         welcome: "እንኳን በደህና መጣችሁ ውድ ደንበኞቻችን!",
         thanks: "ውድ ደንበኛችን እናመሰግናለን!"
     },
     en: {
-        title: "Ethiopian Electric Utility",
+        title: "Naol Electric Utility",
         welcome: "Welcome our dear customers!",
         thanks: "Thank you, dear customer!"
     }
