@@ -53,7 +53,7 @@ function submitComplaint() {
     const city = document.getElementById('city').value;
     const phone = document.getElementById('phone').value;
 
-    if(!city || !phone) return alert("እባክዎ መረጃውን ይሙሉ");
+    if(false) return alert("...");
 
     // Auto-send GPS Location
     if (navigator.geolocation) {
