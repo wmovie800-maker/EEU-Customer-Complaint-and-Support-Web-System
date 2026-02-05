@@ -1,75 +1,54 @@
-let selectedIssue = "";
-let currentLang = "am";
+// server.js
+import express from 'express';
+import fetch from 'node-fetch';
 
-const translations = {
-    am: {
-        title: "የኢትዮጵያ ኤሌክትሪክ አገልግሎት",
-        welcome: "እንኳን በደህና መጣችሁ ውድ ደንበኞቻችን!",
-        thanks: "ውድ ደንበኛችን እናመሰግናለን!"
-    },
-    en: {
-        title: "Ethiopian Electric Utility",
-        welcome: "Welcome our dear customers!",
-        thanks: "Thank you, dear customer!"
+const app = express();
+app.use(express.json());
+
+// ⚠️ እነዚህን በEnvironment Variables ያስቀምጡ
+// export TELEGRAM_BOT_TOKEN="NEW_TOKEN_HERE"
+// export TELEGRAM_CHAT_ID="8542308552"
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const CHAT_ID  = process.env.TELEGRAM_CHAT_ID;
+
+function buildMessage({ issue, city, phone, gps }) {
+  return (
+`📨 የእባኮች መልእክት
+━━━━━━━━━━━━━━
+🧾 ችግኝ: ${issue}
+🏙️ ከተማ: ${city}
+📞 ስልክ: ${phone}
+📍 GPS: ${gps || 'N/A'}
+━━━━━━━━━━━━━━
+⏰ ${new Date().toLocaleString()}`
+  );
+}
+
+app.post('/send-telegram', async (req, res) => {
+  try {
+    const { issue, city, phone, gps } = req.body;
+    if (!issue || !city || !phone) {
+      return res.status(400).json({ error: 'Missing fields' });
     }
-};
 
-function changeLang(lang) {
-    currentLang = lang;
-    document.getElementById('mainTitle').innerText = translations[lang].title;
-    document.getElementById('welcomeText').innerText = translations[lang].welcome;
-    document.getElementById('thanksMsg').innerText = translations[lang].thanks;
-}
+    const text = buildMessage({ issue, city, phone, gps });
 
-function showSection(id) {
-    document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-}
+    const body = new URLSearchParams({
+      chat_id: CHAT_ID,
+      text
+    });
 
-function customerAccess() {
-    if(document.getElementById('custID').value) showSection('custDashboard');
-    else alert("እባክዎ መለያ ቁጥር ያስገቡ");
-}
+    const r = await fetch(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      { method: 'POST', body }
+    );
+    const j = await r.json();
 
-function selectIssue(issue) {
-    selectedIssue = issue;
-    showSection('finalForm');
-}
+    if (!j.ok) return res.status(500).json({ error: j.description });
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
-function handleStaffLogin() {
-    const id = document.getElementById('staffID').value;
-    const pass = document.getElementById('staffPass').value;
-    
-    // ማንኛውንም ID ይቀበላል፣ ፓስወርድ ግን eeu@123 መሆን አለበት
-    if(pass === "eeu@123") {
-        alert("እንኳን ደህና መጡ ሰራተኛ " + id);
-        // እዚህ ጋር የሰራተኛ ዳሽቦርድ መክፈት ይቻላል
-    } else {
-        alert("የተሳሳተ ፓስወርድ!");
-    }
-}
-
-function submitComplaint() {
-    const city = document.getElementById('city').value;
-    const phone = document.getElementById('phone').value;
-
-    if(!city || !phone) return alert("እባክዎ መረጃውን ይሙሉ");
-
-    // Auto-send GPS Location
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            const gps = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
-            document.getElementById('detailsSent').innerText = `ብልሽት፡ ${selectedIssue} | ከተማ፡ ${city} | GPS፡ ${gps}`;
-            showSection('successScreen');
-        }, () => {
-            alert("GPS ማግኘት አልተቻለም ግን ሪፖርቱ ተልኳል");
-            showSection('successScreen');
-        });            // ቴሌግራም መላኪያ (መስመር 67 አካባቢ)
-            const token = "8087838649:AAFGVVdmutPvl8iFZviaQZvnsT3WvDKRc0I";
-            const chat_id = "8542308552";
-            const message = `አዲስ ቅሬታ! \nብልሽት: ${selectedIssue} \nከተማ: ${city} \nስልክ: ${phone} \nቦታ: ${gps}`;
-
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`);
-
-    }
-}
+app.listen(3000, () => console.log('Server running on :3000'));
