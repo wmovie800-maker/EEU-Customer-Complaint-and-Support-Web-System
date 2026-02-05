@@ -64,6 +64,12 @@ function submitComplaint() {
         }, () => {
             alert("GPS ማግኘት አልተቻለም ግን ሪፖርቱ ተልኳል");
             showSection('successScreen');
-        });
+        });            // ቴሌግራም መላኪያ (መስመር 67 አካባቢ)
+            const token = "8087838649:AAFGVVdmutPvl8iFZviaQZvnsT3WvDKRc0I";
+            const chat_id = "8542308552";
+            const message = `አዲስ ቅሬታ! \nብልሽት: ${selectedIssue} \nከተማ: ${city} \nስልክ: ${phone} \nቦታ: ${gps}`;
+
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`);
+
     }
 }
